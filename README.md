@@ -1,3 +1,7 @@
-# For Run the test 
+# For install the node modules 
+
+npm install
+
+# For Run the test
 
 npm test
