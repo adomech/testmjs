@@ -1,4 +1,4 @@
-export function add() {
+function add() {
 
     let result = 0;
     for (let value of arguments) {
@@ -8,7 +8,7 @@ export function add() {
 
 }
 
-export function deserialize(content) {
+function deserialize(content) {
 
     let total = content.total;
     let arr = {};
@@ -43,7 +43,7 @@ export function deserialize(content) {
 
 }
 
-export function listToObject(content) {
+function listToObject(content) {
 
     let result = {};
     let arr = JSON.parse(JSON.stringify(content));
@@ -55,7 +55,7 @@ export function listToObject(content) {
     return result;
 }
 
-export function objectToList(content) {
+function objectToList(content) {
 
     let arr = [];
     let _content = JSON.parse(JSON.stringify(content));
@@ -70,7 +70,7 @@ export function objectToList(content) {
     return arr;
 }
 
-export function serialize(content) {
+function serialize(content) {
 
     let arr = {};
     // names
@@ -105,3 +105,5 @@ export function serialize(content) {
 function addExtraCero(n) {
     return n < 10 ? "0" + n : n;
 }
+
+export { add, serialize, objectToList, deserialize, listToObject };
