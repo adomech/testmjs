@@ -9,39 +9,55 @@ function add() {
 }
 
 function deserialize(content) {
+    let rowName = "";
+    let objArr = {};
 
-    let total = content.total;
-    let arr = {};
-    let arrT = [];
+    for (let keys = Object.keys(content), i = 0, end = keys.length; i < end; i++) {
 
-    for (let row = 0; row < total; row++) {
+        let key = keys[i],
+            value = content[key];
 
-        let obj = {};
-        if (content["row" + row + "_hits"] !== undefined) {
+        if (i == keys.length - 1) {
+            objArr[key] = value;
+        } else {
 
-            obj["hits"] = {};
-            obj["hits"]["hit"] = [];
+            let rowNameTmp = key.split("_");
+            rowName = rowNameTmp[0].replace(/[0-9]/g, "");
+            let prop = rowNameTmp[1];
 
-            for (let [key, value] of Object.entries(content["row" + row + "_hits"])) {
-                const date = new Date(parseInt(value.replace("t:", "")));
-                obj["hits"]["hit"].push({
-                    time: addExtraCero(date.getDate()) + "/" + addExtraCero(date.getMonth() + 1) + "/" + date.getFullYear()
-                });
+            let index = key.match(/\d+/)[0];
+
+            if (!objArr[rowName]) objArr[rowName] = [];
+            if (!objArr[rowName][index]) objArr[rowName][index] = {};
+
+            if (value instanceof Object) {
+                let str = {};
+                for (let [key, valueInside] of Object.entries(value)) {
+
+                    let timeProp = key.split("_")[1];
+                    let row2Name = key.split("_")[0].replace(/[0-9]/g, "");
+                    let element = {};
+
+                    if (!str[row2Name]) str[row2Name] = [];
+
+                    const date = new Date(parseInt(valueInside.replace("t:", "")));
+
+                    element[timeProp] = addExtraCero(date.getDate()) + "/" + addExtraCero(date.getMonth() + 1) + "/" + date.getFullYear();
+                    str[row2Name].push(element);
+
+                }
+                value = str;
             }
+
+            objArr[rowName][index][prop] = value;
+
         }
 
-        obj["name"] = content["row" + row + "_name"];
-        obj["value"] = content["row" + row + "_value"];
-
-        arrT.push(obj);
     }
 
-    arr["row"] = arrT;
-    arr["total"] = total;
-
-    return arr;
-
+    return objArr;
 }
+
 
 function listToObject(content) {
 
