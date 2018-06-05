@@ -12,20 +12,18 @@ function deserialize(content) {
     let rowName = "";
     let objArr = {};
 
-    for (let keys = Object.keys(content), i = 0, end = keys.length; i < end; i++) {
-
-        let key = keys[i],
-            value = content[key];
-
-        if (i == keys.length - 1) {
+    for (let [key,value] of Object.entries(content) ) {
+        
+        let match = key.match(/\d+(_)/);
+        
+        if (match === null) {
             objArr[key] = value;
         } else {
 
             let rowNameTmp = key.split("_");
             rowName = rowNameTmp[0].replace(/[0-9]/g, "");
             let prop = rowNameTmp[1];
-
-            let index = key.match(/\d+/)[0];
+            let index = match[0].replace("_", "");
 
             if (!objArr[rowName]) objArr[rowName] = [];
             if (!objArr[rowName][index]) objArr[rowName][index] = {};
