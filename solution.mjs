@@ -29,22 +29,7 @@ function deserialize(content) {
             if (!objArr[rowName][index]) objArr[rowName][index] = {};
 
             if (value instanceof Object) {
-                let str = {};
-                for (let [key, valueInside] of Object.entries(value)) {
-
-                    let timeProp = key.split("_")[1];
-                    let row2Name = key.split("_")[0].replace(/[0-9]/g, "");
-                    let element = {};
-
-                    if (!str[row2Name]) str[row2Name] = [];
-
-                    const date = new Date(parseInt(valueInside.replace("t:", "")));
-
-                    element[timeProp] = addExtraCero(date.getDate()) + "/" + addExtraCero(date.getMonth() + 1) + "/" + date.getFullYear();
-                    str[row2Name].push(element);
-
-                }
-                value = str;
+                value = parseObject(value);
             }
 
             objArr[rowName][index][prop] = value;
@@ -56,6 +41,25 @@ function deserialize(content) {
     return objArr;
 }
 
+function parseObject(value){
+    
+    let str = {};
+    for (let [key, valueInside] of Object.entries(value)) {
+
+        let timeProp = key.split("_")[1];
+        let row2Name = key.split("_")[0].replace(/[0-9]/g, "");
+        let element = {};
+
+        if (!str[row2Name]) str[row2Name] = [];
+
+        const date = new Date(parseInt(valueInside.replace("t:", "")));
+
+        element[timeProp] = addExtraCero(date.getDate()) + "/" + addExtraCero(date.getMonth() + 1) + "/" + date.getFullYear();
+        str[row2Name].push(element);
+
+    }
+    return str;
+}
 
 function listToObject(content) {
 
